@@ -1,0 +1,39 @@
+#!/bin/sh
+
+TAG="$$-"`date +%Y%m%d-%H%M%S`
+TMPFILE="/tmp/templatise-${TAG}"
+
+
+for RENSUBST in				    \
+	's/emptystuff/galactiz/'	    \
+
+do
+    find . -not '(' -path '*/.svn/*' -o -name '.svn' ')' -exec rename "${RENSUBST}" {} \;
+done
+
+
+find . -type f > "${TMPFILE}-liste"
+echo "${TMPFILE}-liste"
+
+
+
+
+for SEDSUBST in											\
+    's/making fullfiness with nothing/displaying a galaxy/'			\
+    's/Copyright (C) 2004 Cristelle Barillon \& Jean-Daniel Pauget/Copyright (C) 2005 Cristelle Barillon \& Jean-Daniel Pauget/' \
+    's/emptystuff@disjunkt.com/galactiz@disjunkt.com/'					\
+    's/http:\/\/emptystuff.disjunkt.com\//http:\/\/galactiz.disjunkt.com\//'		\
+    's/emptystuff/galactiz/'								\
+    's/EmptyStuff/Galactiz/'								\
+
+do
+    cat "${TMPFILE}-liste" | grep -vw template | grep -vw templatise | grep -v '.svn/' | while read FNAME
+    do
+	echo sed "${SEDSUBST}" "${FNAME}"
+	sed -e ': loop' -e "${SEDSUBST}" -e 't loop' "${FNAME}" > "${TMPFILE}"
+	cp "${TMPFILE}" "${FNAME}"
+    done
+done
+
+rm -f "${TMPFILE}" "${TMPFILE}-liste"
+

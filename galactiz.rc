@@ -1,0 +1,126 @@
+
+# rcfile-sample for the galactiz program
+#
+# $Id$
+
+
+# rcfile syntax :
+# any line which begins with a '#' is a comment and is ignored
+# any empty line or full of spaces and/or tabs is ignored
+# affections are written such as :
+#   varname = value
+# only one affectation per line
+# variable names use C syntax (first char is an alpha followed by any alphas, digits or underscores)
+# spaces and tabulations which precede or follow the equal sign are all ignored
+# in case some value needs spaces, it can be quoted with double-quotes (" value  ")
+# or quotes ('  another value   ')
+# the antislash char is used (\) for escaping :
+#   for some antislahes  (   one_anti = "\\" )
+#   for doubles quotes   (  one_dquot = "\"" )
+#   for single quotes    (  one_quote = '\'' )
+#
+# all rcfile affectations can be overriden on the command line with this syntax :
+#      varname = "value"    (in rcfile)
+#   is equivalent to
+#      --set_varname=value  (on the command line)
+# the precedence is : environment var are overiden by rcfile and rcfile are overriden by commmand line
+
+ 
+# syntaxe du rcfile :
+# les lignes qui commencent par un '#' sont des commentaires.
+# les lignes pleines d'espaces ou de tabulations sont ignorées.
+# les affectation s'ecrivent de la forme :
+#   nomvar  =  valeur
+# une seule affectation par ligne
+# les noms de variable sont syntaxe C  ([alpha][... alnums | _ ...])
+# les espaces et tabulations qui précèdent et _suivent_ l'opérateur d'affectation (=) sont ignorés
+# pour mettre une valeur contenant des espaces, mieux vaut encadrer la valeur par des
+# guillemets (" valeur  ") ou des cotes ('   autre  valeur   ')
+# l'antislash (\) est dans tous les cas un caractère d'échappement :
+#    pour un antislash    ( un_anti = "\\" )
+#         un guillemet    ( un_guil = "\"" )
+#         une cote        ( un_cote = '\'' )
+#
+# toutes les affectations du rcfile peuvent être court-circuitée par la ligne de commande :
+#    nom_var = "valeur"   (dans le rcfile)
+# est équivalent à
+#    --set_nom_var=valeur (sur la ligne de commande)
+# les prioités sont que : les varibles d'environement sont court-circuitées par le rcfile,
+# et le rcfile court-circuité par la ligne de commande
+
+
+
+         
+# video-driver
+# SDL_VIDEODRIVER = x11 | dga | fbcon | directfb | svgalib | ggi | aalib  |  directx | windib
+#
+# unices
+#	     x11 - (default) Use the X11 windowing system
+#	     dga - Use XFree86 DGA 2.0 for fullscreen hardware acceleration
+#	   fbcon - Use the framebuffer console
+#	directfb - Use the DirectFB API
+#	 svgalib - Use the SVGAlib API
+#	     ggi - Use the General Graphics Interface API
+#	   aalib - Use the Ascii Art library
+# win32
+#	 directx - (default) Use the DirectDraw API
+#	  windib - Use the standard Win32 GDI
+
+# audio driver
+# SDL_AUDIODRIVER = dsp | dma | esd | artsc  |  dsound | waveout
+#
+# unices
+#	     dsp - (default) Use the OSS API by opening /dev/dsp
+#	     dma - Use the OSS API to perform DMA access on /dev/dsp
+#	     esd - Connect to the ESound audio daemon
+#	   artsc - Connect to the ARTS audio daemon
+# win32
+#	  dsound - (default) Use the DirectSound API
+#	 waveout - Use the Win32 MultiMedia API
+
+# X11's display
+# DISPLAY = 
+
+
+# debug stuff ###################################################################
+
+# initial window size
+# scr_width = 800
+# scr_height = 600
+
+# outputs the environment variables before sdl inits
+# debugenv = no
+
+# dumps GL_VERSION, GL_VENDOR, GL_RENDERER, GL_EXTENSIONS after init
+# glinfo = no
+
+# enables the use of sound
+# enablesound = no
+
+# display of the gpl license ?
+# gplshow = no
+
+# do we show a text for testing fonts
+# showfonttest = no
+
+# do we draw a default random set of circles ?
+# drawcircles = yes
+
+# do we map the testfield-test facility to F5/F6 ?
+# showtestfield = false
+
+# the poll and refresh rate in milliseconds
+# refresh_rate = 25
+
+# the starting value for bpm (for every tick)
+# bpm = 320
+
+# some very temporary hack in order to be able clean the starting display
+zbuffer = off
+
+# the sound buffer size, the smaller, the faster, the trickier also !
+soundbuffer_size = 2048
+
+# do we want to display a useless twisted menu for debugging purpose ?
+# testmenutordu = no
+

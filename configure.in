@@ -1,0 +1,416 @@
+dnl 
+dnl $Id$
+dnl Galactiz Copyright (C) 2005 Cristelle Barillon & Jean-Daniel Pauget
+dnl displaying a galaxy
+dnl
+dnl galactiz@disjunkt.com  -  http://galactiz.disjunkt.com/
+dnl 
+dnl This file is part of Galactiz
+dnl 
+dnl Galactiz is free software; you can redistribute it and/or modify
+dnl it under the terms of the GNU General Public License as published by
+dnl the Free Software Foundation; either version 2 of the License, or
+dnl (at your option) any later version.
+dnl 
+dnl Galactiz is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+dnl 
+dnl You should have received a copy of the GNU General Public License
+dnl along with Galactiz; if not, write to the Free Software
+dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+dnl 
+dnl You can also try the web at http://www.gnu.org/
+dnl 
+dnl
+dnl galactiz@disjunkt.com  -  http://galactiz.disjunkt.com/
+
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(src/main.cpp)
+
+dnl Detect the canonical host and target build environment
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
+
+dnl autoheader
+AM_CONFIG_HEADER(src/config.h)
+
+dnl Setup for automake
+AM_INIT_AUTOMAKE(galactiz, 0.1)
+
+
+dnl Check for tools
+
+AC_PROG_CC
+AC_PROG_CXX
+dnl JDJDJDJD pour voir comment fait libtool a la place AC_PROG_RANLIB
+AC_LIBTOOL_WIN32_DLL
+AM_PROG_LIBTOOL
+
+dnl Check for compiler environment
+
+AC_C_CONST
+
+dnl JD's standard minimum CFLAG
+dnl CHANGED for JD's ENterGroup default nasty warnings
+CFLAGS="$CFLAGS -O2 -Wall -Wcast-qual -Wwrite-strings"
+dnl CXXFLAGS="$CXXFLAGS -O2 -Wall -Woverloaded-virtual -Wcast-qual -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -Wnested-externs -Winline"
+CXXFLAGS="$CXXFLAGS -O2 -Wall -Woverloaded-virtual -Wcast-qual -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls"
+
+dnl are we compiling for windows -----------------------------------------------------------
+
+dnl first we set the default value
+case "$target" in
+    *-*-mingw32*)
+	defbuildforwin32=yes
+	;;
+    *)
+	defbuildforwin32=no
+	;;
+esac
+
+dnl then we act as eventually required by the configure...
+AC_MSG_CHECKING([whether we build for windows])
+AC_ARG_ENABLE(build-for-win32,
+[  --enable-build-for-win32
+                          enables building for a win32 paths repartition],
+     try_build_for_win32=$enableval, try_build_for_win32="$defbuildforwin32")
+AC_MSG_RESULT($try_build_for_win32)
+
+if test "$try_build_for_win32" = yes; then
+    AC_DEFINE(BUILD_FOR_WIN32, 1, we build for a win32 install paths flavour)
+fi
+
+
+dnl Figure out which math library to use ---------------------------------------------------
+
+case "$target" in
+    *-*-mingw32*)
+        MATHLIB=""
+        SYS_GL_LIBS="-lopengl32 -lglu32"
+        ;;
+    *-*-beos*)
+        MATHLIB=""
+        SYS_GL_LIBS="-lGL"
+        ;;
+    *-*-linux*)
+        MATHLIB="-lm"
+        SYS_GL_LIBS="-L/usr/X11R6/lib -lGL"
+        ;;
+    *)
+        MATHLIB="-lm"
+        SYS_GL_LIBS="-lGL"
+        ;;
+esac
+AC_SUBST(MATHLIB)
+
+
+dnl Check for SDL ---------------------------------------------------------------------------
+
+SDL_VERSION=1.1.0
+AM_PATH_SDL($SDL_VERSION,
+            :,
+	    AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
+)
+CFLAGS="$CFLAGS $SDL_CFLAGS"
+CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
+
+dnl Check for OpenGL
+AC_MSG_CHECKING(for OpenGL support)
+have_opengl=no
+AC_TRY_COMPILE([
+ #include <GL/gl.h>
+],[
+],[
+have_opengl=yes
+])
+AC_MSG_RESULT($have_opengl)
+if test x$have_opengl = xyes; then
+    GL_LIBS="$SDL_LIBS $SYS_GL_LIBS"
+else
+    AC_MSG_ERROR(Unable to find OpenGL headers and libraries)
+fi
+AC_SUBST(GL_LIBS)
+dnl	GLUT_LIBS="$GL_LIBS -lGLU -lglut"
+dnl	AC_SUBST(GLUT_LIBS)
+
+
+dnl explain we want rather c++
+AC_LANG_CPLUSPLUS
+
+dnl check for bzouz template ---------------------------------------------------------
+AC_MSG_CHECKING(for bzouz template)
+have_bzouz=no
+SAVECXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$SAVECXXFLAGS $INCPATH"
+AC_TRY_COMPILE([
+#include <bzouz/bzouz.h>
+],[
+],[
+have_bzouz=yes
+])
+if test x$have_bzouz = xno; then
+    for P_INC in /usr /usr/local "${prefix}"
+    do
+	if test x$have_bzouz = xno; then
+	    echo -n "  ($P_INC :"
+	    CXXFLAGS="$SAVECXXFLAGS $INCPATH -I$P_INC/include"
+	    AC_TRY_COMPILE([
+#include <bzouz/bzouz.h>
+	    ],[
+	    ],[
+	    have_bzouz=yes
+	    ])
+	    if test x$have_bzouz = xyes; then
+		INCPATH="$INCPATH -I$P_INC/include"
+		echo -n " yes.)"
+	    else
+		echo -n " no.)"
+	    fi
+	fi
+    done
+    echo -n " : "
+fi
+CXXFLAGS="$SAVECXXFLAGS"
+AC_MSG_RESULT($have_bzouz)
+if test x$have_bzouz = xyes; then
+    :
+else
+    AC_MSG_ERROR(Unable to find bzouz headers)
+fi
+
+dnl end of check for bzouz template --------------------------------------------------
+
+
+
+dnl check for matcalc template -------------------------------------------------------
+AC_MSG_CHECKING(for matcalc template)
+have_matcalc=no
+SAVECXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$SAVECXXFLAGS $INCPATH"
+AC_TRY_COMPILE([
+#include <matcalc/matcalc.h>
+],[
+],[
+have_matcalc=yes
+])
+if test x$have_matcalc = xno; then
+    for P_INC in /usr /usr/local "${prefix}"
+    do
+	if test x$have_matcalc = xno; then
+	    echo -n "  ($P_INC :"
+	    CXXFLAGS="$SAVECXXFLAGS $INCPATH -I$P_INC/include"
+	    AC_TRY_COMPILE([
+#include <matcalc/matcalc.h>
+	    ],[
+	    ],[
+	    have_matcalc=yes
+	    ])
+	    if test x$have_matcalc = xyes; then
+		INCPATH="$INCPATH -I$P_INC/include"
+		echo -n " yes.)"
+	    else
+		echo -n " no.)"
+	    fi
+	fi
+    done
+    echo -n " : "
+fi
+CXXFLAGS="$SAVECXXFLAGS"
+AC_MSG_RESULT($have_matcalc)
+if test x$have_matcalc = xyes; then
+    :
+else
+    AC_MSG_ERROR(Unable to find matcalc headers)
+fi
+
+dnl end of check for matcalc template ------------------------------------------------
+
+
+
+dnl check for grapefruit library ------------------------------------------------------
+AC_MSG_CHECKING(for grapefruit lib)
+have_grapefruit=no
+GRAPEFRUITLPATH=""
+SAVECXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$SAVECXXFLAGS $INCPATH"
+AC_TRY_COMPILE([
+#include <grapefruit/grapefruit.h>
+],[
+],[
+have_grapefruit=yes
+])
+if test x$have_grapefruit = xno; then
+    for P_INC in /usr /usr/local "${prefix}"
+    do
+	if test x$have_grapefruit = xno; then
+	    echo -n "  ($P_INC :"
+	    CXXFLAGS="$SAVECXXFLAGS $INCPATH -I$P_INC/include"
+	    AC_TRY_COMPILE([
+#include <grapefruit/grapefruit.h>
+	    ],[
+	    ],[
+	    have_grapefruit=yes
+	    ])
+	    if test x$have_grapefruit = xyes; then
+		INCPATH="$INCPATH -I$P_INC/include"
+		GRAPEFRUITLPATH="-L$P_INC/lib"
+		echo -n " yes.)"
+	    else
+		echo -n " no.)"
+	    fi
+	fi
+    done
+    echo -n " : "
+fi
+CXXFLAGS="$SAVECXXFLAGS"
+AC_MSG_RESULT($have_grapefruit)
+if test x$have_grapefruit = xyes; then
+    GRAPEFRUIT_LIBS="$SDL_LIBS $GRAPEFRUITLPATH -lgrapefruit"
+else
+    AC_MSG_ERROR(Unable to find grapefruit headers)
+fi
+AC_SUBST(GRAPEFRUIT_LIBS)
+
+# ----------------------------------------------------------------------
+# Win32 objects need to tell the header whether they will be linking
+# with a dll or static archive in order that everything is imported
+# to the object in the same way that it was exported from the
+# archive (extern for static, __declspec(dllimport) for dlls)
+# ----------------------------------------------------------------------
+
+AC_MSG_CHECKING(if grapefruit lib is imported dll)
+grapefruit_isdll=no
+LIBGRAPEFRUIT_DLL_IMPORT=""
+case "$host" in
+*-*-cygwin* | *-*-mingw* )
+    if test X"$enable_shared" = Xyes; then
+
+#	AC_TRY_LINK_FUNC([libgrapefruit_is_dll],
+#			 [LIBGRAPEFRUIT_DLL_IMPORT=-DLIBGRAPEFRUIT_DLL_IMPORT])
+	LIBS_SAVE="$LIBS"
+	LIBS="-lgrapefruit $LIBS"
+	CFLAGSSSAVE="$CFLAGS"
+	CFLAGS=""
+	CXXFLAGSSSAVE="$CXXFLAGS"
+	CXXFLAGS=""
+	AC_TRY_LINK_FUNC([libgrapefruit_is_dll],
+			 [grapefruit_isdll=yes])
+	CXXFLAGS="$CXXFLAGSSSAVE"
+	CFLAGS="$CFLAGSSSAVE"
+	LIBS="$LIBS_SAVE"
+    fi
+    ;;
+esac
+if test x$grapefruit_isdll = xyes; then
+    LIBGRAPEFRUIT_DLL_IMPORT=-DLIBGRAPEFRUIT_DLL_IMPORT
+fi
+AC_MSG_RESULT($grapefruit_isdll)
+AC_SUBST(LIBGRAPEFRUIT_DLL_IMPORT)
+dnl JDJDJDJD this should be cleaner, like being applied only in the proper Makefile.am ?
+CFLAGS="$CFLAGS $LIBGRAPEFRUIT_DLL_IMPORT"
+CXXFLAGS="$CXXFLAGS $LIBGRAPEFRUIT_DLL_IMPORT"
+
+dnl end of check for grapefruit library -----------------------------------------------
+
+
+dnl check for caroube library ---------------------------------------------------------
+AC_MSG_CHECKING(for caroube lib)
+have_caroube=no
+CAROUBELPATH=""
+SAVECXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$SAVECXXFLAGS $INCPATH"
+AC_TRY_COMPILE([
+#include <caroube/caroube.h>
+],[
+],[
+have_caroube=yes
+])
+if test x$have_caroube = xno; then
+    for P_INC in /usr /usr/local "${prefix}"
+    do
+	if test x$have_caroube = xno; then
+	    echo -n "  ($P_INC :"
+	    CXXFLAGS="$SAVECXXFLAGS $INCPATH -I$P_INC/include"
+	    AC_TRY_COMPILE([
+#include <caroube/caroube.h>
+	    ],[
+	    ],[
+	    have_caroube=yes
+	    ])
+	    if test x$have_caroube = xyes; then
+		INCPATH="$INCPATH -I$P_INC/include"
+		CAROUBELPATH="-L$P_INC/lib"
+		echo -n " yes.)"
+	    else
+		echo -n " no.)"
+	    fi
+	fi
+    done
+    echo -n " : "
+fi
+CXXFLAGS="$SAVECXXFLAGS"
+AC_MSG_RESULT($have_caroube)
+if test x$have_caroube = xyes; then
+    CAROUBE_LIBS="$SDL_LIBS $CAROUBELPATH -lcaroube"
+else
+    AC_MSG_ERROR(Unable to find caroube headers)
+fi
+AC_SUBST(CAROUBE_LIBS)
+
+# ----------------------------------------------------------------------
+# Win32 objects need to tell the header whether they will be linking
+# with a dll or static archive in order that everything is imported
+# to the object in the same way that it was exported from the
+# archive (extern for static, __declspec(dllimport) for dlls)
+# ----------------------------------------------------------------------
+
+AC_MSG_CHECKING(if caroube lib is imported dll)
+caroube_isdll=no
+LIBCAROUBE_DLL_IMPORT=""
+case "$host" in
+*-*-cygwin* | *-*-mingw* )
+    if test X"$enable_shared" = Xyes; then
+
+#	AC_TRY_LINK_FUNC([libcaroube_is_dll],
+#			 [LIBCAROUBE_DLL_IMPORT=-DLIBCAROUBE_DLL_IMPORT])
+	LIBS_SAVE="$LIBS"
+	LIBS="-lcaroube $LIBS"
+	CFLAGSSSAVE="$CFLAGS"
+	CFLAGS=""
+	CXXFLAGSSSAVE="$CXXFLAGS"
+	CXXFLAGS=""
+	AC_TRY_LINK_FUNC([libcaroube_is_dll],
+			 [caroube_isdll=yes])
+	CXXFLAGS="$CXXFLAGSSSAVE"
+	CFLAGS="$CFLAGSSSAVE"
+	LIBS="$LIBS_SAVE"
+    fi
+    ;;
+esac
+if test x$caroube_isdll = xyes; then
+    LIBCAROUBE_DLL_IMPORT=-DLIBCAROUBE_DLL_IMPORT
+fi
+AC_MSG_RESULT($caroube_isdll)
+AC_SUBST(LIBCAROUBE_DLL_IMPORT)
+dnl JDJDJDJD this should be cleaner, like being applied only in the proper Makefile.am ?
+CFLAGS="$CFLAGS $LIBCAROUBE_DLL_IMPORT"
+CXXFLAGS="$CXXFLAGS $LIBCAROUBE_DLL_IMPORT"
+
+
+dnl end of check for caroube library ------------------------------------------------------
+
+
+# dnl concatenation of include dirs
+CFLAGS="$CFLAGS $INCPATH"
+CXXFLAGS="$CXXFLAGS $INCPATH"
+
+
+# Finally create all the generated files
+AC_OUTPUT([
+	src/Makefile
+	Makefile
+	documentation.dox
+])
+
