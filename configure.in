@@ -83,6 +83,19 @@ if test "$try_build_for_win32" = yes; then
 fi
 
 
+AC_MSG_CHECKING([whether we build for Total-Local®])
+AC_ARG_ENABLE(total-local,
+[  --enable-total-local   enables building and using Total-Local® ressources and path],
+    try_total_local=$enableval, try_total_local=no)
+AC_MSG_RESULT($try_total_local)
+
+if test "$try_total_local" = yes; then
+    TLPREFIX="$prefix"
+else
+    TLPREFIX=""
+fi
+AC_SUBST(TLPREFIX)
+
 dnl Figure out which math library to use ---------------------------------------------------
 
 case "$target" in
