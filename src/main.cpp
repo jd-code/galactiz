@@ -44,6 +44,7 @@
 
 #include <bzouz/bzouz.h>
 #include "rcfile.h"
+#include "morespin.h"
 #include <matcalc/matcalc.h>
 #include "tdgal.h"
 
@@ -758,15 +759,14 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     TDGal unegalaxy (1000);
     // TDGal unegalaxy (175000);
     unegalaxy.show ();
-    
+
     Vector3 axe (0.6, 0.7, 0.1);
     axe/=axe.norm();
-    Mv_Spin unegalaxy_spin (unegalaxy, axe, 0.3, 0);
-    //Mv_Spin unegalaxy_spin (unegalaxy, axe, 1.0, 10.0*1000.0);
+    Mv_Spin unegalaxy_spin (unegalaxy, axe, 0.3333333333333, 10000);
+    SpinForEver sfe (unegalaxy, 1000);
+    unegalaxy_spin.pa_finish += sfe;
     unegalaxy_spin.start ();
 
-cerr << (Vector3(1,0,0)^Vector3(0,1,0)) << endl;
-    
     ACStartZoomIn  acstartzoomin (unegalaxy);
     ACStartZoomOUT acstartzoomout (unegalaxy);
     ACStopZoomIn   acstopzoomin (unegalaxy);
@@ -778,8 +778,7 @@ cerr << (Vector3(1,0,0)^Vector3(0,1,0)) << endl;
 
     TDfps tdfps (100);
     global_keymap_down.map_sdlkey_action (SDLK_f, KMOD_LCTRL, *tdfps.getactdtoggle());
-poll_delay = 10;
-cerr << "poll_delay=" << poll_delay << endl;     
+
     while (our_poll (poll_delay)) {
 	// JDJDJDJD on ne fait rien ?
 	//	int n = randint(5);

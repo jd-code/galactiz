@@ -39,7 +39,16 @@ vimtest: all
 		[ -f @TLPREFIX@/lib/libgrapefruit.so ] && export OUR_LD_PRELOAD="$$OUR_LD_PRELOAD @TLPREFIX@/lib/libgrapefruit.so"; \
 	    export LD_PRELOAD="$$OUR_LD_PRELOAD" ; \
 	    ./src/galactiz )
-##	./src/testjd
+
+ddddebug: all
+	(  \
+	    [ "@TLPREFIX@" ] && \
+		[ -f @TLPREFIX@/lib/libcaroube.so ] && export OUR_LD_PRELOAD="$$OUR_LD_PRELOAD @TLPREFIX@/lib/libcaroube.so" ; \
+	    [ "@TLPREFIX@" ] && \
+		[ -f @TLPREFIX@/lib/libgrapefruit.so ] && export OUR_LD_PRELOAD="$$OUR_LD_PRELOAD @TLPREFIX@/lib/libgrapefruit.so"; \
+	    export LD_PRELOAD="$$OUR_LD_PRELOAD" ; \
+	    ddd src/galactiz ; \
+	)
 
 vimtestw32: all
 	rm -f ./src/galactiz.exe

@@ -1,4 +1,5 @@
 
+#include <bzouz/bzouz.h>
 #include <morespin.h>
 
 namespace grapefruit
@@ -21,6 +22,26 @@ namespace grapefruit
 	ptd->rotate (axis, speed1k * dt);
 	lasttime = curtime;
 	return 0;
+    }
+
+
+    SpinForEver::SpinForEver (TDObj &td, Uint32 duration)
+    {	ptd = &td;
+	SpinForEver::duration = duration;
+	pmvspin = NULL;
+    }
+
+    void SpinForEver::doit (void)
+    {	
+	if (pmvspin != NULL)
+	    delete (pmvspin);
+	Vector3 axe (randint(11)-1, randint(11)-1, randint(11)-1);
+	axe /= axe.norm();
+	pmvspin = new Mv_Spin (*ptd, axe, 0.25, duration);
+	if (pmvspin != NULL) {
+	    pmvspin->pa_finish += *this;
+	    pmvspin->start();
+	}
     }
 }
 
