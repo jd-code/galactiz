@@ -43,5 +43,11 @@ namespace grapefruit
 	    pmvspin->start();
 	}
     }
+
+    const string & SpinForEver::getacname (void)
+    {	if (name.size() == 0)
+	    name = ptd->gettdname() + "->SpinForEver";
+	return name;
+    }
 }
 
