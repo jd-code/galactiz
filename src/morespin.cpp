@@ -44,9 +44,8 @@ namespace grapefruit
 	}
     }
 
-    const string & SpinForEver::getacname (void)
-    {	if (name.size() == 0)
-	    name = ptd->gettdname() + "->SpinForEver";
+    string SpinForEver::getacname (void)
+    {	string name = ptd->gettdname() + "->SpinForEver";
 	return name;
     }
 }
