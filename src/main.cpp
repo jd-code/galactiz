@@ -759,6 +759,11 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     // TDGal unegalaxy (175000);
     unegalaxy.show ();
     
+    Vector3 axe (0.6, 0.7, 0.1);
+    axe/=axe.norm();
+    Mv_Spin unegalaxy_spin (unegalaxy, axe, 1.0, 0);
+    unegalaxy_spin.start ();
+    
     ACStartZoomIn  acstartzoomin (unegalaxy);
     ACStartZoomOUT acstartzoomout (unegalaxy);
     ACStopZoomIn   acstopzoomin (unegalaxy);
