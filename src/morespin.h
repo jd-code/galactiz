@@ -28,7 +28,18 @@ namespace grapefruit
 	    virtual int step (void);
     };
 
-    
+    class SpinForEver : public Action
+    {
+	    TDObj * ptd;
+	    Mv_Spin * pmvspin;
+	    Uint32 duration;
+
+	public:
+	    SpinForEver (TDObj &td, Uint32 duration);
+	    virtual void doit (void);
+
+    };
+
 }   // namespace grapefruit
 
 #endif	// MORESPIN_H_HEADER
