@@ -17,16 +17,16 @@
 
 namespace grapefruit
 {
-    class Mv_Spin2 : public Mvmt
-    {
-	    GLfloat speed1k;	//!< the spin-speed in radian per millisecond
-	    Uint32 t_end;	//!< when the movement must end or 0 for non-ending
-	    Vector3 axis;	//!< the axis of the spin movement
-
-	public:
-	    Mv_Spin2 (TDObj &td, Vector3 &axe, GLfloat speed, Uint32 duration);
-	    virtual int step (void);
-    };
+//    class Mv_Spin2 : public Mvmt
+//    {
+//	    GLfloat speed1k;	//!< the spin-speed in radian per millisecond
+//	    Uint32 t_end;	//!< when the movement must end or 0 for non-ending
+//	    Vector3 axis;	//!< the axis of the spin movement
+//
+//	public:
+//	    Mv_Spin2 (TDObj &td, Vector3 &axe, GLfloat speed, Uint32 duration);
+//	    virtual int step (void);
+//    };
 
     class SpinForEver : public Action
     {

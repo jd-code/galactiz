@@ -2,6 +2,7 @@
 
 TDGal::TDGal (int nb)
 {
+    pacdumpitall = NULL;
     scalemult = 1.0;
 
     int i;
