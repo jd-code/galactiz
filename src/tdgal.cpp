@@ -22,7 +22,7 @@ TDGal::TDGal (int nb)
     }
 
 
-    for (li=nuage.begin(1231231321) ; li!=nuage.end() ; li++) {
+    for (li=nuage.begin() ; li!=nuage.end() ; li++) {
 	for (i=0 ; i<2 ; i++) {
 	    GLfloat r = li->norm();
 	    (*li) *= r;
@@ -121,7 +121,6 @@ TDGal::TDGal (int nb)
 int TDGal::perform_reinit (void)
 {   
     list <Vector3>::iterator li;
-
     dl_nuage = glGenLists(1);
     glNewList (dl_nuage, GL_COMPILE);
 	// glBegin (GL_LINE_LOOP);

@@ -47,6 +47,7 @@
 #include <matcalc/matcalc.h>
 
 #include "tdgal.h"
+#include "tdfps.h"
 
 using namespace std ;
 using namespace grapefruit ;
@@ -730,52 +731,6 @@ static	MainMenu mainmenu;
 	mainmenu.show();
 	mainmenu.activate();
 
-	// ------------ test d'un compound avec des tordus... -------
-
-static	TDMenu menutdtordu;
-
-	int nbtdtordu1s = 6;
-	TDTordu1 *tdtordu1s = new TDTordu1 [nbtdtordu1s];
-	if (tdtordu1s == NULL) {
-	    bzouzerr << "could not allocate TDTordu1[" << nbtdtordu1s << "] ????" << endl ;
-	} else {
-	    int i;
-	    for (i=0 ; i<nbtdtordu1s ; i++) {
-		tdtordu1s[i].setscale (0.1 + 0.02*i);
-		menutdtordu.push_back (tdtordu1s[i]);
-	    }
-	}
-
-	int nbtdtordu2s = 4;
-	TDTordu2 *tdtordu2s = new TDTordu2 [nbtdtordu2s];
-	if (tdtordu2s == NULL) {
-	    bzouzerr << "could not allocate TDTordu2[" << nbtdtordu2s << "] ????" << endl ;
-	} else {
-	    int i;
-	    for (i=0 ; i<nbtdtordu2s ; i++) {
-		tdtordu2s[i].setscale (0.1 + 0.03*i);
-		menutdtordu.push_back (tdtordu2s[i]);
-	    }
-	}
-
-	int nbtdtordu3s = 4;
-	TDTordu3 *tdtordu3s = new TDTordu3 [nbtdtordu3s];
-	if (tdtordu3s == NULL) {
-	    bzouzerr << "could not allocate TDTordu3[" << nbtdtordu3s << "] ????" << endl ;
-	} else {
-	    int i;
-	    for (i=0 ; i<nbtdtordu3s ; i++) {
-		tdtordu3s[i].setscale (0.1 + 0.02*i);
-		menutdtordu.push_back (tdtordu3s[i]);
-	    }
-	}
-
-	menutdtordu.change_viewtype (TDMenu::INARRAY, 3);
-	if (rcparam.getbool ("testmenutordu")) {
-	    menutdtordu.show ();
-	    menutdtordu.activate ();
-	}
-	
 	// ---------- instanciations de differentes actions et affectations a des touches de raccourci
 	
 	global_keymap_down.map_sdlkey_action (SDLK_ESCAPE, acquit);
@@ -813,6 +768,10 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     global_keymap_up.map_unicode_action (SDLK_PLUS, acstopzoomin);
     global_keymap_down.map_unicode_action (SDLK_MINUS, acstartzoomout);
     global_keymap_up.map_unicode_action (SDLK_MINUS, acstopzoomout);
+
+    TDfps tdfps (100);
+    tdfps.show ();
+    tdfps.activate ();
     
     while (our_poll (poll_delay)) {
 	// JDJDJDJD on ne fait rien ?
@@ -821,7 +780,7 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     }
 
     SDL_Quit ();
-    
+
     return 0;
 }
 
