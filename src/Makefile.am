@@ -39,7 +39,6 @@ bin_PROGRAMS = galactiz
 
 galactiz_SOURCES = rcfile.cpp \
 		    tdgal.cpp \
-		    tdfps.cpp \
 		     main.cpp
 
 galactiz_LDFLAGS = --enable-auto-import
