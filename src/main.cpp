@@ -227,7 +227,7 @@ bool keybuproute (SDL_Event const & event)
 
 
 //
-// --------- cycles intto full-screen modes and back to window mode and so on ------------
+// --------- cycles into full-screen modes and back to window mode and so on -------------
 //
 //
 
@@ -238,8 +238,13 @@ class ACCycleFullScreen : public Action
 	int ww, wh; // windowed sizes
 	
     public:
+	virtual ~ACCycleFullScreen (void) {}
 	ACCycleFullScreen (void)
 	    {	fullscreenon = -1;
+	    }
+	virtual const string & getacname (void)
+	    {	static string name ("ACCycleFullScreen");
+		return name;
 	    }
 	virtual void doit (void)
 	    {	
@@ -306,13 +311,19 @@ class MainMenu : public grapefruit::TDObj //  public TDObjHideable, public TDObj
 
 class ACQuit : public Action
 {
-    SDL_Event event_quit;
+	SDL_Event event_quit;
 
-    virtual void doit (void)
-    {
-	event_quit.type = SDL_QUIT;
-	SDL_PushEvent(&event_quit);
-    }
+    public:
+	virtual ~ACQuit (void) {}
+	virtual void doit (void)
+	    {
+		event_quit.type = SDL_QUIT;
+		SDL_PushEvent(&event_quit);
+	    }
+	virtual const string & getacname (void)
+	    {	static string name ("ACQuit");
+		return name;
+	    }
 } acquit;
 
 MainMenu::MainMenu (void)
@@ -504,11 +515,16 @@ class ACStartZoomIn : public Action
 {
 	TDGal *ptd;
     public:
+	virtual ~ACStartZoomIn (void) {}
 	ACStartZoomIn (TDGal & td)
 	    {   ptd = &td;
 	    }
 	virtual void doit (void)
 	    {	ptd->scalemult = 1.05;
+	    }
+	virtual const string & getacname (void)
+	    {	static string name ("ACStartZoomIn");
+		return name;
 	    }
 };
 
@@ -516,11 +532,16 @@ class ACStartZoomOUT : public Action
 {
 	TDGal *ptd;
     public:
+	virtual ~ACStartZoomOUT (void) {}
 	ACStartZoomOUT (TDGal & td)
 	    {   ptd = &td;
 	    }
 	virtual void doit (void)
 	    {	ptd->scalemult = 1.0/1.05;
+	    }
+	virtual const string & getacname (void)
+	    {	static string name ("ACStartZoomOUT");
+		return name;
 	    }
 };
 
@@ -528,11 +549,16 @@ class ACStopZoomIn : public Action
 {
 	TDGal *ptd;
     public:
+	virtual ~ACStopZoomIn (void) {}
 	ACStopZoomIn (TDGal & td)
 	    {   ptd = &td;
 	    }
 	virtual void doit (void)
 	    {	ptd->scalemult = 1.0;
+	    }
+	virtual const string & getacname (void)
+	    {	static string name ("ACStopZoomIn");
+		return name;
 	    }
 };
 
@@ -540,11 +566,16 @@ class ACStopZoomOUT : public Action
 {
 	TDGal *ptd;
     public:
+	virtual ~ACStopZoomOUT (void) {}
 	ACStopZoomOUT (TDGal & td)
 	    {   ptd = &td;
 	    }
 	virtual void doit (void)
 	    {	ptd->scalemult = 1.0;
+	    }
+	virtual const string & getacname (void)
+	    {	static string name ("ACStopZoomOUT");
+		return name;
 	    }
 };
 

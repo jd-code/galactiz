@@ -33,11 +33,13 @@ namespace grapefruit
 	    TDObj * ptd;
 	    Mv_Spin * pmvspin;
 	    Uint32 duration;
+	    string name;
 
 	public:
+	    virtual ~SpinForEver (void) {}
 	    SpinForEver (TDObj &td, Uint32 duration);
 	    virtual void doit (void);
-
+	    virtual const string & getacname (void);
     };
 
 }   // namespace grapefruit
