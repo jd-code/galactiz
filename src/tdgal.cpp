@@ -2,11 +2,13 @@
 
 TDGal::TDGal (int nb)
 {
+#ifdef CINEMATEMPOR
     // JDJDJDJD cinematique temporaire
 	vra = 2.0*M_PI / 1000.0;
 	angrot = 0.0;
 	vrb = 2.0*M_PI / 4142.0;
 	bngrot = 0.0;
+#endif
 	scalemult = 1.0;
 
     int i;
@@ -134,6 +136,7 @@ int TDGal::perform_reinit (void)
 
 void TDGal::render (void)
 {
+#ifdef CINEMATEMPOR
     // JDJD bad cinematic code
     {
 	// rotate (Vector3 (0.0, 1.0, 0.0), vra);
@@ -144,9 +147,10 @@ void TDGal::render (void)
 	angrot += vra;
 
 	rotate (Vector3 (0.0, 0.0, 1.0), vrb);
-	scale *= scalemult;
     }
     // JDJD end of bad cinematic code*
+#endif
+    scale *= scalemult;
 
     glPushAttrib(   GL_LIGHTING_BIT |   // glMaterialfv, glShadeModel
 		GL_COLOR_BUFFER_BIT |   // glBlendFunc
