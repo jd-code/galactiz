@@ -5,7 +5,7 @@ namespace grapefruit
 {
     //! this TD displays the number of render call per seconds (fps) and an average for the last nbmoy values
 
-    class TDfps : public TDString
+    class TDfps : public TDString, public TDObjSHable
     {
 	    Uint32 lasttime;	//!< the last time render was called
 
