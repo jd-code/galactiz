@@ -756,7 +756,7 @@ static	ACScramble_td_displayed acscramble_td_displayed;
 	poll_delay = rcparam.getint("refresh_rate");
     }
 
-    TDGal unegalaxy (10000);
+    TDGal unegalaxy (1000);
     // TDGal unegalaxy (175000);
     unegalaxy.show ();
     
@@ -770,8 +770,9 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     global_keymap_up.map_unicode_action (SDLK_MINUS, acstopzoomout);
 
     TDfps tdfps (100);
-    tdfps.show ();
     tdfps.activate ();
+
+    global_keymap_down.map_sdlkey_action (SDLK_f, KMOD_LCTRL, *tdfps.getactdtoggle());
     
     while (our_poll (poll_delay)) {
 	// JDJDJDJD on ne fait rien ?
