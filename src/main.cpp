@@ -113,6 +113,8 @@ class MainGLinit : public GLReInit
 		else
 		    glDisable(GL_DEPTH_TEST);
 
+glClearColor (0.5, 0.5, 0.5, 0.0);
+		
 		// JDJDJDJD a better object should wrap this one for once (later on..)
 		init_circle ();
 
@@ -486,6 +488,51 @@ glTranslatef (0.0, 0.0, -0.1);
 
 //---------- fin test de profondeur de champs --------------------------------------------
 
+//---------- rotative string -------------------------------------------------------------
+
+    // tout ça n'est pas trés propre : peut-être devrait-on s'autodeleter complêtement aprés le hide ?
+
+class TDRotString : public TDString
+{
+	Mv_Spin *pmv;
+
+	class ACOurFinish : public Action
+	{
+		TDObj *ptd;
+	    public:
+		virtual ~ACOurFinish (void) {}
+		ACOurFinish (TDObj &td) : ptd(&td) {}
+		virtual void doit (void)
+		    {	ptd->hide();
+		    }
+	} * pacourfinish;
+	
+    public:
+	TDRotString (const string &s, double h = 1.0) : TDString (s, h)
+	    {	pmv = NULL;
+		pacourfinish = NULL;
+	    }
+	virtual void gotclicked (SDL_Event const &event)
+	    {
+		if (event.type == SDL_MOUSEBUTTONUP) {
+		    if (pmv == NULL) {
+			Vector3 axe(0,1,1);
+			axe /= axe.norm();
+			pmv = new Mv_Spin (*(TDObj*)this, axe, 0.33333333333333333333333333333333, 3000);
+			if (pmv == NULL) {
+			    bzouzerr << "could not create a Mv_Spin ??" << endl ;
+			    return;
+			}
+			pacourfinish = new ACOurFinish(*this);
+			if (pacourfinish != NULL)
+			    pmv->pa_finish += *pacourfinish;
+			pmv->start();
+		    }
+		}
+	    }
+};
+
+//---------- lecture des parametres ------------------------------------------------------
 
 class SDLRCParam : public RCParam
 {
@@ -508,6 +555,9 @@ class SDLRCParam : public RCParam
 	    }
 
 };
+
+//---------- zoom-in et out --------------------------------------------------------------
+
 
 class ACStartZoomIn : public Action
 {
@@ -723,7 +773,8 @@ int main (int nb, char ** cmde)
 			"galactiz@disjunkt.com  -  http://galactiz.disjunkt.com/\n"
 		    );
 		 
-static	TDString tds (test, r);
+//static	TDString tds (test, r);
+static	TDRotString tds (test, r);
 	
 	if (rcparam.getbool("gplshow")) {
 	    tds.setxypos (0.0, 0.0);
@@ -805,6 +856,8 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     global_keymap_down.map_unicode_action (SDLK_MINUS, acstartzoomout);
     global_keymap_up.map_unicode_action (SDLK_MINUS, acstopzoomout);
 
+    global_keymap_down.map_sdlkey_action (SDLK_d, *unegalaxy.getACDumpItAll());
+    
     TDfps tdfps (100);
     global_keymap_down.map_sdlkey_action (SDLK_f, KMOD_LCTRL, *tdfps.getactdtoggle());
 
