@@ -45,9 +45,7 @@
 #include <bzouz/bzouz.h>
 #include "rcfile.h"
 #include <matcalc/matcalc.h>
-
 #include "tdgal.h"
-#include "tdfps.h"
 
 using namespace std ;
 using namespace grapefruit ;
@@ -664,6 +662,7 @@ int main (int nb, char ** cmde)
 	}
 
 	// ----------- galactiz keyboard initialisation ------------------------
+	advertise_unmapped_keys = rcparam.getbool ("warn_unmapped_keys");
 	global_keydownhandler = keybdownroute;
 	global_keyuphandler = keybuproute;
 
@@ -770,8 +769,6 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     global_keymap_up.map_unicode_action (SDLK_MINUS, acstopzoomout);
 
     TDfps tdfps (100);
-    tdfps.activate ();
-
     global_keymap_down.map_sdlkey_action (SDLK_f, KMOD_LCTRL, *tdfps.getactdtoggle());
     
     while (our_poll (poll_delay)) {

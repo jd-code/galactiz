@@ -97,6 +97,9 @@
 # enables the use of sound
 # enablesound = no
 
+# warn when some unmapped keys are used ?
+# warn_unmapped_keys = false
+
 # display of the gpl license ?
 # gplshow = no
 
