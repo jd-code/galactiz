@@ -492,26 +492,15 @@ glTranslatef (0.0, 0.0, -0.1);
 
     // tout ça n'est pas trés propre : peut-être devrait-on s'autodeleter complêtement aprés le hide ?
 
-class TDRotString : public TDString
+class TDRotString : public TDString, public TDObjSHable 
 {
 	Mv_Spin *pmv;
 
-	class ACOurFinish : public Action
-	{
-		TDObj *ptd;
-	    public:
-		virtual ~ACOurFinish (void) {}
-		ACOurFinish (TDObj &td) : ptd(&td) {}
-		virtual void doit (void)
-		    {	ptd->hide();
-		    }
-	} * pacourfinish;
-	
     public:
 	TDRotString (const string &s, double h = 1.0) : TDString (s, h)
 	    {	pmv = NULL;
-		pacourfinish = NULL;
 	    }
+
 	virtual void gotclicked (SDL_Event const &event)
 	    {
 		if (event.type == SDL_MOUSEBUTTONUP) {
@@ -523,9 +512,9 @@ class TDRotString : public TDString
 			    bzouzerr << "could not create a Mv_Spin ??" << endl ;
 			    return;
 			}
-			pacourfinish = new ACOurFinish(*this);
-			if (pacourfinish != NULL)
-			    pmv->pa_finish += *pacourfinish;
+
+			pmv->pa_finish += actdhide;
+
 			pmv->start();
 		    }
 		}
