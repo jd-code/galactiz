@@ -113,6 +113,13 @@ TDGal::TDGal (int nb)
     GLReInit::subscribe ();
 }
 
+const string & TDGal::gettdname (void)
+{
+static string tdname ("tdgal");
+    return tdname;
+}
+
+
 int TDGal::perform_reinit (void)
 {   
     list <Vector3>::iterator li;

@@ -14,6 +14,7 @@ class TDGal : public TDObj, public GLReInit
 	
 	TDGal (int nb=256);
 	virtual void render (void);
+	virtual const string &	gettdname (void);
 
 	// JDJDJDJD those need to be defined !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	inline virtual void renderclickablezone (void) {}
