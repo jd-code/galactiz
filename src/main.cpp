@@ -187,10 +187,10 @@ int our_poll (Uint32 delay)
 	    }
 	}
 	t_past = SDL_GetTicks() - t_begin;
-	if (delay-t_past > 10)
-	    SDL_Delay (10);
-	else
-	    break;
+	//if (delay-t_past > 10)
+	//    SDL_Delay (10);
+	//else
+	//    break;
     }
     maindraw ();
     return 1;
@@ -554,7 +554,7 @@ class ACStopZoomOUT : public Action
 
 int main (int nb, char ** cmde)
 {
-    int poll_delay;
+    int poll_delay = 1;
 
     {
 #ifdef BZOUTOTALOCAL
@@ -763,6 +763,8 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     axe/=axe.norm();
     Mv_Spin unegalaxy_spin (unegalaxy, axe, 1.0, 0);
     unegalaxy_spin.start ();
+
+cerr << (Vector3(1,0,0)^Vector3(0,1,0)) << endl;
     
     ACStartZoomIn  acstartzoomin (unegalaxy);
     ACStartZoomOUT acstartzoomout (unegalaxy);
@@ -775,7 +777,8 @@ static	ACScramble_td_displayed acscramble_td_displayed;
 
     TDfps tdfps (100);
     global_keymap_down.map_sdlkey_action (SDLK_f, KMOD_LCTRL, *tdfps.getactdtoggle());
-    
+poll_delay = 10;
+cerr << "poll_delay=" << poll_delay << endl;     
     while (our_poll (poll_delay)) {
 	// JDJDJDJD on ne fait rien ?
 	//	int n = randint(5);
