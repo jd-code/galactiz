@@ -39,7 +39,7 @@ namespace grapefruit
 	    virtual ~SpinForEver (void) {}
 	    SpinForEver (TDObj &td, Uint32 duration);
 	    virtual void doit (void);
-	    virtual const string & getacname (void);
+	    virtual string getacname (void);
     };
 
 }   // namespace grapefruit

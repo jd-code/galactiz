@@ -242,9 +242,8 @@ class ACCycleFullScreen : public Action
 	ACCycleFullScreen (void)
 	    {	fullscreenon = -1;
 	    }
-	virtual const string & getacname (void)
-	    {	static string name ("ACCycleFullScreen");
-		return name;
+	virtual string getacname (void)
+	    {	return string ("ACCycleFullScreen");
 	    }
 	virtual void doit (void)
 	    {	
@@ -320,9 +319,8 @@ class ACQuit : public Action
 		event_quit.type = SDL_QUIT;
 		SDL_PushEvent(&event_quit);
 	    }
-	virtual const string & getacname (void)
-	    {	static string name ("ACQuit");
-		return name;
+	virtual string getacname (void)
+	    {	return string ("ACQuit");
 	    }
 } acquit;
 
@@ -522,8 +520,8 @@ class ACStartZoomIn : public Action
 	virtual void doit (void)
 	    {	ptd->scalemult = 1.05;
 	    }
-	virtual const string & getacname (void)
-	    {	static string name ("ACStartZoomIn");
+	virtual string getacname (void)
+	    {	string name = ptd->gettdname() + ("->ACStartZoomIn");
 		return name;
 	    }
 };
@@ -539,8 +537,8 @@ class ACStartZoomOUT : public Action
 	virtual void doit (void)
 	    {	ptd->scalemult = 1.0/1.05;
 	    }
-	virtual const string & getacname (void)
-	    {	static string name ("ACStartZoomOUT");
+	virtual string getacname (void)
+	    {	string name = ptd->gettdname() + ("->ACStartZoomOUT");
 		return name;
 	    }
 };
@@ -556,8 +554,8 @@ class ACStopZoomIn : public Action
 	virtual void doit (void)
 	    {	ptd->scalemult = 1.0;
 	    }
-	virtual const string & getacname (void)
-	    {	static string name ("ACStopZoomIn");
+	virtual string getacname (void)
+	    {	string name = ptd->gettdname() + ("->ACStopZoomIn");
 		return name;
 	    }
 };
@@ -573,8 +571,8 @@ class ACStopZoomOUT : public Action
 	virtual void doit (void)
 	    {	ptd->scalemult = 1.0;
 	    }
-	virtual const string & getacname (void)
-	    {	static string name ("ACStopZoomOUT");
+	virtual string getacname (void)
+	    {	string name = ptd->gettdname() + ("->ACStopZoomOUT");
 		return name;
 	    }
 };
