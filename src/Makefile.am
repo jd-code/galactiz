@@ -39,6 +39,7 @@ bin_PROGRAMS = galactiz
 
 galactiz_SOURCES = rcfile.cpp \
 		    tdgal.cpp \
+		 morespin.cpp \
 		     main.cpp
 
 galactiz_LDFLAGS = --enable-auto-import

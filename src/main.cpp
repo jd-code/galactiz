@@ -761,7 +761,8 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     
     Vector3 axe (0.6, 0.7, 0.1);
     axe/=axe.norm();
-    Mv_Spin unegalaxy_spin (unegalaxy, axe, 1.0, 0);
+    Mv_Spin unegalaxy_spin (unegalaxy, axe, 0.3, 0);
+    //Mv_Spin unegalaxy_spin (unegalaxy, axe, 1.0, 10.0*1000.0);
     unegalaxy_spin.start ();
 
 cerr << (Vector3(1,0,0)^Vector3(0,1,0)) << endl;
