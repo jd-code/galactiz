@@ -805,6 +805,13 @@ int main (int nb, char ** cmde)
     int poll_delay;
 
     {
+#ifdef BZOUTOTALOCAL
+	cerr	 << "     bzouz = " << get_bzouz_version () << endl
+		 << "   matcalc = " << get_matcalc_version () << endl
+		 << "   caroube = " << caroube::get_caroube_version () << endl
+		 << "grapefruit = " << grapefruit::get_grapefruit_version () << endl
+		 << "  galactiz = " << "Total-Local® " PACKAGE "-" VERSION " $Id$" << endl ;
+#endif
 	SDLRCParam rcparam; //!< the map of the Params that can be set in rcfile or command-line
 
 	// --- here in this part, we first set the default Params that can be overriden later on ---------
