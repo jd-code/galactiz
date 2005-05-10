@@ -161,6 +161,22 @@ int initvideo (int scr_width, int scr_height, bool enablezbuffer)
 }
 
 
+// the views used in this piece of code
+ViewOrtho viewortho (DefaultOrthScene);	    //!< the main whole-screen view
+ViewOrtho smallfun (DefaultOrthScene);	    //!< the upper right vignette
+
+
+void resize (void)
+{
+    viewortho.setsizes (0,0, screen->w, screen->h,
+			-1.0,1.0,-1.0,1.0,15.0,60.0);
+    smallfun.setsizes (screen->w - screen->w/5, 0, screen->w/5, screen->h/5,
+			-1.0,1.0,-1.0,1.0,15.0,60.0);
+//    smallfun.setsizes (screen->w - screen->w/5, screen->h - screen->h/5, screen->w/5, screen->h/5,
+//			-1.0,1.0,-1.0,1.0,15.0,60.0);
+
+}
+
 int our_poll (Uint32 delay)
 {
     SDL_Event event;
@@ -176,7 +192,8 @@ int our_poll (Uint32 delay)
 		    case SDL_VIDEORESIZE:
 			screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 16, SDL_OPENGL|SDL_SWSURFACE|SDL_RESIZABLE);
 			// screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 16, SDL_OPENGL|SDL_SWSURFACE|SDL_RESIZABLE|SDL_FULLSCREEN);
-			glViewport(0, 0, (GLint) event.resize.w, (GLint) event.resize.h);
+			// glViewport(0, 0, (GLint) event.resize.w, (GLint) event.resize.h);
+			resize ();
 #ifdef BUILD_FOR_WIN32
 			glreinit ();
 #endif
@@ -269,14 +286,16 @@ class ACCycleFullScreen : public Action
 		fullscreenon --;
 		if (fullscreenon < 0) {	    // we're back to windowed mode
 		    screen = SDL_SetVideoMode(ww, wh, 16, SDL_OPENGL|SDL_SWSURFACE|SDL_RESIZABLE);
-		    glViewport(0, 0, (GLint) ww, (GLint) wh);
+		    // glViewport(0, 0, (GLint) ww, (GLint) wh);
+		    resize ();
 #ifdef BUILD_FOR_WIN32
 		    glreinit ();
 #endif
 		    fullscreenon = -1;	    // just in case it was not minus one...
 		} else {		    // we go to some full screen mode
 		    screen = SDL_SetVideoMode(modes[fullscreenon]->w, modes[fullscreenon]->h, 16, SDL_OPENGL|SDL_SWSURFACE|SDL_FULLSCREEN);
-		    glViewport(0, 0, (GLint) modes[fullscreenon]->w, (GLint) modes[fullscreenon]->h);
+		    // glViewport(0, 0, (GLint) modes[fullscreenon]->w, (GLint) modes[fullscreenon]->h);
+		    resize ();
 #ifdef BUILD_FOR_WIN32
 		    glreinit ();
 #endif
@@ -737,6 +756,15 @@ int main (int nb, char ** cmde)
 
 	// Vector4 coul1 (0.7, 0.9, 1.0, 1.0);	// bleu sarrazin ???
 
+	// ----------- grapefruit default view initialisation -------------------
+	resize ();
+
+	viewortho.show();
+	viewortho.activate();
+
+	smallfun.show();
+	smallfun.activate();
+	
 	// ---------- affichage de la gpl ----------------------------------------
 	double r = 0.05;
 	string test (   "Galactiz Copyright ©2002,©2005 Cristelle Barillon & Jean-Daniel Pauget\n"
