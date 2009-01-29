@@ -750,7 +750,8 @@ int main (int nb, char ** cmde)
 	}
 
 	// ----------- galactiz keyboard initialisation ------------------------
-	advertise_unmapped_keys = rcparam.getbool ("warn_unmapped_keys");
+//	advertise_unmapped_keys = rcparam.getbool ("warn_unmapped_keys");
+	advertise_unmapped_keys = true;
 	global_keydownhandler = keybdownroute;
 	global_keyuphandler = keybuproute;
 
