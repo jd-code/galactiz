@@ -33,8 +33,6 @@ namespace grapefruit
 
     void SpinForEver::doit (void)
     {	
-	if (pmvspin != NULL)
-	    delete (pmvspin);
 	Vector3 axe (randint(11)-1, randint(11)-1, randint(11)-1);
 	if (axe.norm() < 0.0001) {
 	    //    bzouzerr << "norme trop petite " << endl
@@ -46,6 +44,7 @@ namespace grapefruit
 	pmvspin = new Mv_Spin (*ptd, axe, 0.25, duration);
 	if (pmvspin != NULL) {
 	    pmvspin->pa_finish += *this;
+	    pmvspin->delete_after_finish = true;
 	    pmvspin->start();
 	}
     }
