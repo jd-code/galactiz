@@ -33,7 +33,7 @@
 #include <stdlib.h>	// setenv
 
 #include <map>
-#include <strstream>
+#include <sstream>
 
 #include "SDL.h"
 
@@ -481,7 +481,7 @@ glTranslatef (0.0, 0.0, -0.1);
 		glBegin (GL_LINE_LOOP);
 		render_circle ();
 
-		strstream s;
+		stringstream s;
 		s << setprecision (4) << setw(10) << pos.z << ends ;
 		pnums->update (s.str());
 		pnums->render();
@@ -854,7 +854,7 @@ static	ACScramble_td_displayed acscramble_td_displayed;
 	poll_delay = rcparam.getint("refresh_rate");
     }
 
-    TDGal unegalaxy (1000);
+    TDGal unegalaxy (500);
     // TDGal unegalaxy (175000);
     unegalaxy.show ();
 
