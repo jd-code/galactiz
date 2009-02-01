@@ -45,23 +45,35 @@ TDGal::TDGal (int nb)
     Vector3 v = *li;
     li++;
     while (li != nuage.end()) {
-	if (fabs(v.x) < fabs(li->x)) {
-	    lj = nuage.insert (li, Vector3(v.x, li->y, li->z));
+	if (fabs(v.z) < fabs(li->z)) {
+	    lj = nuage.insert (li, Vector3(li->x, li->y, v.z));
 	} else {
-	    nuage.insert (li, Vector3(li->x, v.y, v.z));
+	    nuage.insert (li, Vector3(v.x, v.y, li->z));
 	    lj = li;
 	}
 	lk = lj;
 	lk--;
 
-	if (fabs(lk->y) < fabs(lj->y))
-	    nuage.insert (lj, Vector3(lj->x, lk->y, lj->z));
-	else
-	    nuage.insert (lj, Vector3(lk->x, lj->y, lk->z));
+	if (fabs(lk->y-lj->y) > fabs(lk->x-lj->x)) {
+	    if (fabs(lk->y) < fabs(lj->y))
+		nuage.insert (lj, Vector3(lj->x, lk->y, lj->z));
+	    else
+		nuage.insert (lj, Vector3(lk->x, lj->y, lk->z));
 
 
-	v = *li;
-	li++;
+	    v = *li;
+
+	    li++;
+	} else {
+	    if (fabs(lk->x) < fabs(lj->x))
+		nuage.insert (lj, Vector3(lk->x, lj->y, lj->z));
+	    else
+		nuage.insert (lj, Vector3(lj->x, lk->y, lk->z));
+
+
+	    v = *li;
+	    li++;
+	}
     }
     Vector3 &f = *nuage.begin();
     nuage.push_back (Vector3 (v.x, v.y, f.z));
