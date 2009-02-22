@@ -39,6 +39,7 @@ bin_PROGRAMS = galactiz
 
 galactiz_SOURCES = rcfile.cpp \
 		    tdgal.cpp \
+		 tdqudoor.cpp \
 		 morespin.cpp \
 	      fakexmlread.cpp \
 	         sxd_read.cpp \
