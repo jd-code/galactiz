@@ -86,9 +86,10 @@ void TDQuDoor::render (void)
 		       GL_POINT_BIT     // GL_POINT_SMOOTH
 		);
     glMaterialfv (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, (GLfloat *) GLRGBA_BLACK );
+    glMaterialfv (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, (GLfloat *) GLRGBA_BLACK );
     glMaterialfv (GL_FRONT_AND_BACK, GL_SPECULAR,	     (GLfloat *) GLRGBA_TRANSPBLACK );
     // glMaterialfv (GL_FRONT_AND_BACK, GL_EMISSION,	     (GLfloat *) GLRGBA_WHITE);
-    glMaterialfv (GL_FRONT_AND_BACK, GL_EMISSION,	     (GLfloat *) Vector4(0.2,0.2,0.2,0.0));
+    glMaterialfv (GL_FRONT_AND_BACK, GL_EMISSION,	     (GLfloat *) Vector4(0.8,0.0,0.0,0.0));
     glMateriali  (GL_FRONT_AND_BACK, GL_SHININESS,	     128); 
 
     glShadeModel (GL_SMOOTH);
