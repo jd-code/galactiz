@@ -47,6 +47,7 @@
 #include "morespin.h"
 #include <matcalc/matcalc.h>
 #include "tdgal.h"
+#include "tdqudoor.h"
 
 using namespace std ;
 using namespace grapefruit ;
@@ -125,8 +126,22 @@ glClearColor (0.5, 0.5, 0.5, 0.0);
 
 };
 
+// those two are used as a hint for fullscreen mode
+int initial_w = -1, initial_h = -1;
+
 int initvideo (int scr_width, int scr_height, bool enablezbuffer)
 {
+static bool firstcall = true;
+
+    if (firstcall) {	// try to get the current screen size
+	const SDL_VideoInfo *p = SDL_GetVideoInfo ();
+	if (p != NULL) {
+//    bzouzerr << "current = (" << p->current_w << " x " << p->current_h << ")" << endl;
+	    initial_w = p->current_w;
+	    initial_h = p->current_h;
+	}
+    }
+
     screen = SDL_SetVideoMode(scr_width, scr_height, 16, SDL_OPENGL|SDL_SWSURFACE|SDL_RESIZABLE);
     if ( screen == NULL ) {
         cerr << "Couldn't set " << scr_width << "x" << scr_height<< " video mode: "
@@ -169,9 +184,9 @@ ViewOrtho smallfun (DefaultOrthScene);	    //!< the upper right vignette
 void resize (void)
 {
     viewortho.setsizes (0,0, screen->w, screen->h,
-			-1.0,1.0,-1.0,1.0,15.0,60.0);
+			-1.0,1.0,-1.0,1.0,1.0,60.0);
     smallfun.setsizes (screen->w - screen->w/5, 0, screen->w/5, screen->h/5,
-			-1.0,1.0,-1.0,1.0,15.0,60.0);
+			-1.0,1.0,-1.0,1.0,1.0,60.0);
 //    smallfun.setsizes (screen->w - screen->w/5, screen->h - screen->h/5, screen->w/5, screen->h/5,
 //			-1.0,1.0,-1.0,1.0,15.0,60.0);
 
@@ -281,6 +296,19 @@ class ACCycleFullScreen : public Action
 			}
 			ww = screen->w, wh = screen->h;
 			fullscreenon = nbmodes;
+			if (initial_w != -1)
+			{   int i;
+			    for (i=0 ; i<nbmodes ; i++) {
+// bzouzerr << "(" << modes[i]->w << " x " << modes[i]->h << ")" << endl;
+				if ((initial_w != modes[i]->w) || (initial_h != modes[i]->h))
+				    continue;
+				else {
+				    i++;
+				    break;
+				}
+			    }
+			    fullscreenon = i;
+			}
 		    }
 		}
 		fullscreenon --;
@@ -855,15 +883,23 @@ static	ACScramble_td_displayed acscramble_td_displayed;
     }
 
     TDGal unegalaxy (500);
+    TDQuDoor untruc;
     // TDGal unegalaxy (175000);
     unegalaxy.show ();
+    untruc.show ();
 
     Vector3 axe (0.6, 0.7, 0.1);
     axe/=axe.norm();
-    Mv_Spin unegalaxy_spin (unegalaxy, axe, 0.3333333333333, 10000);
+    Mv_Spin unegalaxy_spin (unegalaxy, axe, 0.3333333333333, 1000);
     SpinForEver sfe (unegalaxy, 1000);
+    Mv_Spin untruc_spin (untruc, axe, 0.3333333333333, 10000);
+    SpinForEver untruc_sfe (untruc, 1000);
+    MvQuDoorSelfSpin untruc_aperture(untruc, 10000);
     unegalaxy_spin.pa_finish += sfe;
+    unegalaxy_spin.pa_finish += untruc_sfe;
     unegalaxy_spin.start ();
+    untruc_aperture.start ();
+    
 
     ACStartZoomIn  acstartzoomin (unegalaxy);
     ACStartZoomOUT acstartzoomout (unegalaxy);
