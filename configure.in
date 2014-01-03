@@ -130,6 +130,11 @@ AM_PATH_SDL($SDL_VERSION,
 CFLAGS="$CFLAGS $SDL_CFLAGS"
 CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
 
+dnl add our local include dir
+ABSSRCDIR=`cd $srcdir && pwd`
+CFLAGS="-I"$ABSSRCDIR"/src/include/grapefruit $CFLAGS"
+CXXFLAGS="-I"$ABSSRCDIR"/src/include/grapefruit $CXXFLAGS"
+
 dnl Check for OpenGL
 AC_MSG_CHECKING(for OpenGL support)
 have_opengl=no
